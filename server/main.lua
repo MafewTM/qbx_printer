@@ -16,15 +16,15 @@ lib.addCommand('spawnprinter', {help = Lang:t('command.spawn_printer'), restrict
 end)
 
 RegisterNetEvent('qbx_printer:server:saveDocument', function(url)
+    print(url)
     local src = source
-    local player = exports.qbx_core:GetPlayer(src)
     local info = {}
     local extension = string.sub(url, -4)
     if url ~= nil then
         if validExtensions[extension] then
+            print(validExtensions[extension])
             info.url = url
-            player.Functions.AddItem('printerdocument', 1, nil, info)
-            exports.ox_inventory:AddItem(src, 'printerdocument', 1)
+            exports.ox_inventory:AddItem(src, 'printerdocument', 1, info)
         else
             exports.qbx_core:Notify(src, Lang:t('error.invalid_ext', {fileext = validExtensionsText}), 'error')
         end
