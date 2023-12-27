@@ -7,7 +7,7 @@ local Translations = {
 
     },
     command = {
-        spawn_printer = "spawnout tiskárnu"
+        spawn_printer = "Spawnout tiskárnu"
     }
 }
 
@@ -18,3 +18,4 @@ if GetConvar('qb_locale', 'en') == 'cs' then
         fallbackLang = Lang,
     })
 end
+--translate by stepan_valic
