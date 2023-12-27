@@ -1,23 +1,19 @@
-RegisterNetEvent('qbx_printer:client:useDocument', function(ItemData)
-    local DocumentUrl = ItemData.info.url ~= nil and ItemData.info.url or false
+RegisterNetEvent('qbx_printer:client:useDocument', function(itemData)
+    local documentUrl = itemData.info.url ~= nil and itemData.info.url or false
     SendNUIMessage({
-        action = "open",
-        url = DocumentUrl
+        action = 'open',
+        url = documentUrl
     })
     SetNuiFocus(true, false)
 end)
 
 RegisterNetEvent('qbx_printer:client:spawnPrinter', function()
-    local playerPed = PlayerPedId()
-    local coords    = GetEntityCoords(playerPed)
-    local forward   = GetEntityForwardVector(playerPed)
-    local x, y, z   = table.unpack(coords + forward * 1.0)
+    local coords = GetEntityCoords(cache.ped)
+    local forward = GetEntityForwardVector(cache.ped)
+    local x, y, z = table.unpack(coords + forward * 1.0)
 
     local model = `prop_printer_01`
-    RequestModel(model)
-    while (not HasModelLoaded(model)) do
-        Wait(1)
-    end
+    lib.requestModel(model)
     local obj = CreateObject(model, x, y, z, true, false, true)
     PlaceObjectOnGroundProperly(obj)
     SetModelAsNoLongerNeeded(model)
@@ -40,7 +36,7 @@ end)
 
 RegisterNetEvent('qbx_printer:printer',function()
     SendNUIMessage({
-        action = "start"
+        action = 'start'
     })
     SetNuiFocus(true, true)
 end)
@@ -59,12 +55,11 @@ if Config.UseTarget then
     end)
 else
     RegisterCommand('useprinter', function()
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local PrinterObject = GetClosestObjectOfType(pos.x, pos.y, pos.z, 1.5, `prop_printer_01`, false, false, false)
-        if PrinterObject ~= 0 then
+        local pos = GetEntityCoords(cache.ped)
+        local printerObject = GetClosestObjectOfType(pos.x, pos.y, pos.z, 1.5, `prop_printer_01`, false, false, false)
+        if printerObject ~= 0 then
             SendNUIMessage({
-                action = "start"
+                action = 'start'
             })
             SetNuiFocus(true, true)
         end
