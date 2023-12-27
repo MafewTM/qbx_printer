@@ -1,18 +1,16 @@
 fx_version 'cerulean'
 game 'gta5'
 
-description 'QB-Printer'
+description 'qbx_printer'
+repository 'https://github.com/Qbox-project/qbx_printer'
 version '1.0.0'
 
-ui_page 'html/index.html'
-
-
 shared_scripts {
-
-    'config.lua',
-    '@qb-core/shared/locale.lua',
+    '@ox_lib/init.lua',
+    '@qbx_core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
+    'config.lua',
 }
 
 
@@ -20,9 +18,9 @@ client_script 'client/main.lua'
 
 server_script 'server/main.lua'
 
+ui_page 'html/index.html'
 
 files {
-    '*.lua',
     'html/*.html',
     'html/*.js',
     'html/*.css',
@@ -30,3 +28,4 @@ files {
 }
 
 lua54 'yes'
+use_experimental_fxv2_oal 'yes'
