@@ -1,4 +1,3 @@
-local ITEMS = exports.ox_inventory:Items()
 local validExtensions = {
     ['.png'] = true,
     ['.gif'] = true,
@@ -12,7 +11,7 @@ exports.qbx_core:CreateUseableItem('printerdocument', function(source, item)
     TriggerClientEvent('qbx_printer:client:useDocument', source, item)
 end)
 
-lib.command('spawnprinter', {help = Lang:t('command.spawn_printer'), restricted = 'group.admin'}, function(source)
+lib.addCommand('spawnprinter', {help = Lang:t('command.spawn_printer'), restricted = 'group.admin'}, function(source)
     TriggerClientEvent('qbx_printer:client:spawnPrinter', source)
 end)
 

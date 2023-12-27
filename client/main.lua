@@ -1,3 +1,5 @@
+local config = require 'config.client'
+
 RegisterNetEvent('qbx_printer:client:useDocument', function(itemData)
     local documentUrl = itemData.info.url ~= nil and itemData.info.url or false
     SendNUIMessage({
@@ -41,7 +43,7 @@ RegisterNetEvent('qbx_printer:printer',function()
     SetNuiFocus(true, true)
 end)
 
-if Config.UseTarget then
+if config.useTarget then
     CreateThread(function()
         local options = {
             {
