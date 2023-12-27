@@ -1,5 +1,5 @@
-# qb-printer
-Printer For QB-Core
+# qbx_printer
+Printer For QBox
 
 * ATTENTION: To have this working correctly you MUST change shared.lua as follows: `Search for "printerdocument" and make ["unique"] = true` otherwise documents WILL STACK and You'll be able to see only latest.
 

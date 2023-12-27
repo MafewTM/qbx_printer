@@ -10,14 +10,14 @@ local ValidExtensions = {
 local ValidExtensionsText = '.png, .gif, .jpg, .jpeg'
 
 QBCore.Functions.CreateUseableItem("printerdocument", function(source, item)
-    TriggerClientEvent('qb-printer:client:UseDocument', source, item)
+    TriggerClientEvent('qbx_printer:client:useDocument', source, item)
 end)
 
 QBCore.Commands.Add("spawnprinter", Lang:t('command.spawn_printer'), {}, true, function(source, _)
-	TriggerClientEvent('qb-printer:client:SpawnPrinter', source)
+	TriggerClientEvent('qbx_printer:client:spawnPrinter', source)
 end, "admin")
 
-RegisterNetEvent('qb-printer:server:SaveDocument', function(url)
+RegisterNetEvent('qbx_printer:server:saveDocument', function(url)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local info = {}

@@ -1,4 +1,4 @@
-RegisterNetEvent('qb-printer:client:UseDocument', function(ItemData)
+RegisterNetEvent('qbx_printer:client:useDocument', function(ItemData)
     local DocumentUrl = ItemData.info.url ~= nil and ItemData.info.url or false
     SendNUIMessage({
         action = "open",
@@ -7,7 +7,7 @@ RegisterNetEvent('qb-printer:client:UseDocument', function(ItemData)
     SetNuiFocus(true, false)
 end)
 
-RegisterNetEvent('qb-printer:client:SpawnPrinter', function()
+RegisterNetEvent('qbx_printer:client:spawnPrinter', function()
     local playerPed = PlayerPedId()
     local coords    = GetEntityCoords(playerPed)
     local forward   = GetEntityForwardVector(playerPed)
@@ -26,19 +26,19 @@ end)
 
 -- NUI
 
-RegisterNUICallback('SaveDocument', function(data, cb)
+RegisterNUICallback('saveDocument', function(data, cb)
     if data.url then
-        TriggerServerEvent('qb-printer:server:SaveDocument', data.url)
+        TriggerServerEvent('qbx_printer:server:SaveDocument', data.url)
     end
     cb('ok')
 end)
 
-RegisterNUICallback('CloseDocument', function(_, cb)
+RegisterNUICallback('closeDocument', function(_, cb)
     SetNuiFocus(false, false)
     cb('ok')
 end)
 
-RegisterNetEvent('qb-printer:printer',function()
+RegisterNetEvent('qbx_printer:printer',function()
     SendNUIMessage({
         action = "start"
     })
@@ -52,7 +52,7 @@ if Config.UseTarget then
                   name = 'printer:print',
                   icon = 'fas fa-print',
                   label = Lang:t('info.use_printer'),
-                  event = 'qb-printer:printer',
+                  event = 'qbx_printer:printer',
               }
           }
           exports.ox_target:addModel(`prop_printer_01`, options)
