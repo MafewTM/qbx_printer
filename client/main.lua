@@ -79,7 +79,7 @@ RegisterNetEvent('qbx_printer:client:spawnPrinter', function()
             coords = vec3(x, y, z),
             size = vec3(1.5, 1.5, 1.5),
             rotation = 1,
-            debug = true,
+            debug = config.debug,
             onEnter = onEnter,
             onExit = onExit
         })
