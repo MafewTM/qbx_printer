@@ -10,7 +10,6 @@ shared_scripts {
     '@qbx_core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',
-    'config.lua',
 }
 
 
@@ -21,6 +20,7 @@ server_script 'server/main.lua'
 ui_page 'html/index.html'
 
 files {
+    'config/client.lua',
     'html/*.html',
     'html/*.js',
     'html/*.css',
