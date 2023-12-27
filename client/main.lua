@@ -1,7 +1,7 @@
 local config = require 'config.client'
 
-RegisterNetEvent('qbx_printer:client:useDocument', function(itemData)
-    local documentUrl = itemData.info.url ~= nil and itemData.info.url or false
+RegisterNetEvent('qbx_printer:client:useDocument', function(data)
+    local documentUrl = data.metadata.url ~= nil and data.metadata.url or false
     SendNUIMessage({
         action = 'open',
         url = documentUrl
@@ -26,7 +26,7 @@ end)
 
 RegisterNUICallback('saveDocument', function(data, cb)
     if data.url then
-        TriggerServerEvent('qbx_printer:server:SaveDocument', data.url)
+        TriggerServerEvent('qbx_printer:server:saveDocument', data.url)
     end
     cb('ok')
 end)
@@ -36,7 +36,7 @@ RegisterNUICallback('closeDocument', function(_, cb)
     cb('ok')
 end)
 
-RegisterNetEvent('qbx_printer:printer',function()
+RegisterNetEvent('qbx_printer:client:startPrinter',function()
     SendNUIMessage({
         action = 'start'
     })
@@ -50,7 +50,7 @@ if config.useTarget then
                   name = 'printer:print',
                   icon = 'fas fa-print',
                   label = Lang:t('info.use_printer'),
-                  event = 'qbx_printer:printer',
+                  event = 'qbx_printer:client:startPrinter',
               }
           }
           exports.ox_target:addModel(`prop_printer_01`, options)
