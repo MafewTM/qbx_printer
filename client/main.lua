@@ -14,7 +14,7 @@ RegisterNetEvent('qbx_printer:client:spawnPrinter', function()
 
     local model = `prop_printer_01`
     lib.requestModel(model)
-    local obj = CreateObject(model, x, y, z, true, false, true)
+    local obj = CreateObject(model, x, y, z, false, false, false)
     PlaceObjectOnGroundProperly(obj)
     SetModelAsNoLongerNeeded(model)
     SetEntityAsMissionEntity(obj)
