@@ -1,12 +1,12 @@
 local validExtensions = {
-    ['png'] = true,
-    ['gif'] = true,
-    ['jpg'] = true,
-    ['jpeg'] = true,
-    ['webp'] = true
+    [".png"] = true,
+    [".gif"] = true,
+    [".jpg"] = true,
+    ["jpeg"] = true
 }
 
-local validExtensionsText = '.png, .gif, .jpg, .jpeg, .webp'
+local validExtensionsText = '.png, .gif, .jpg, .jpeg'
+
 
 exports.qbx_core:CreateUseableItem('printerdocument', function(source, item)
     TriggerClientEvent('qbx_printer:client:useDocument', source, item)
@@ -17,7 +17,6 @@ lib.addCommand('spawnprinter', {help = Lang:t('command.spawn_printer'), restrict
 end)
 
 RegisterNetEvent('qbx_printer:server:saveDocument', function(url)
-    print(url)
     local src = source
     local info = {}
     local extension = string.sub(url, -4)
