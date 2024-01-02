@@ -7,6 +7,7 @@ local previewInfo = {
     yAxis = 0,
     customHeading = 0
 }
+local model = config.printerProp
 
 -- This keybind is for controlling the preview prop
 local keybind = lib.addKeybind({
@@ -31,8 +32,22 @@ RegisterNetEvent("qbx_printer:client:useDocument",function(data)
     if config.debug then print("Using document") end
 end)
 
--- Printer event
+local randomPrinterID = 0 
+    -- Printer event
 RegisterNetEvent("qbx_printer:printer",function()
+    randomPrinterID = randomPrinterID -- This gets the ID of the current printer created
+    local hasPaper = exports.ox_inventory:Search('count', 'water')
+    local printerHasInk = lib.callback.await('qbx_printer:server:hasPrinterGotInk', source, randomPrinterID)
+    print(printerHasInk)
+    if not printerHasInk then
+        exports.qbx_core.Notify(nil, "You printer is currently low on ink", "error")
+        return 
+    end
+    if not hasPaper or not printerHasInk then 
+        exports.qbx_core.Notify(nil, "You don't have paper on you unfortunately", "error")
+        return 
+    end
+    exports.qbx_core.Notify(nil, "Inserted paper into printer", "info")
     SetNuiFocus(true, true)
     SendNUIMessage({action = "startPrinting"})
     if config.debug then print("Using printer") end
@@ -42,7 +57,6 @@ end)
 RegisterNetEvent("qbx_printer:client:spawnPrinter",function()
 CreateThread(function()
         local placeObjectOnGround = true
-        local model = config.printerProp
         lib.requestModel(model)
         local pos = GetEntityCoords(cache.ped)
         local heading = GetEntityHeading(cache.ped)
@@ -93,6 +107,9 @@ CreateThread(function()
                 table.insert(createdEntities, obj)
                 lib.hideTextUI()
                 exports.qbx_core.Notify("Success", "You placed a printer down", "success")
+                randomPrinterID = math.random(1, 99900)
+                TriggerServerEvent("qbx_printer:server:createPrinter", randomPrinterID, vector3(previewPos.x, previewPos.y, previewPos.z))
+                print("Triggering server event ",randomPrinterID)
                 if GetEntityHeightAboveGround(obj) < 0.5 or placeObjectOnGround then PlaceObjectOnGroundProperly(obj) end
                 if not config.useTarget then -- Create box zone if not using target
                     function onEnter()
@@ -165,6 +182,21 @@ CreateThread(function()
     end)
 end)
 
+
+RegisterNetEvent("qbx_printer:client:spawnPlacedPrinters",function(placedPrinterCoords)
+    CreateThread(function()
+    print(placedPrinterCoords)
+    lib.requestModel(model)
+    local obj = CreateObject(model, placedPrinterCoords.x, placedPrinterCoords.y, placedPrinterCoords.z, false, false, false)
+                table.insert(createdEntities, obj)
+                FreezeEntityPosition(obj, true)
+    SetModelAsNoLongerNeeded(model)
+    SetEntityAsMissionEntity(obj)
+    PlaceObjectOnGroundProperly(obj)
+    end)
+end)
+
+local printerHasInk = true
 -- Main thread
 CreateThread(function()
     if config.useTarget then
@@ -174,6 +206,7 @@ CreateThread(function()
                 icon = "fas fa-print",
                 label = Lang:t("info.use_printer"),
                 event = "qbx_printer:printer",
+                distance = 1.0,
             }
         }
         exports.ox_target:addModel(config.printerProp, options)
@@ -213,6 +246,9 @@ AddEventHandler("onResourceStop",function(resourceName)
     if GetCurrentResourceName() == resourceName then
         lib.hideTextUI() -- Hides any text on screen
         keybind:disable(true) -- Disables keybind 
+
+
+   
         for _, entity in pairs(createdEntities) do
             if DoesEntityExist(entity) then DeleteEntity(entity) end
         end
