@@ -1,65 +1,69 @@
-Printer = {}
+const Printer = {};
+$(document).ready(function () {
+    window.addEventListener('message', function (event) {
+        const action = event.data.action;
 
-$(document).ready(function(){
-    window.addEventListener('message', function(event){
-        var action = event.data.action;
+        switch (action) {
+            case "openDocument":
+                Printer.openDocument(event.data);
+                break;
+            case "startPrinting":
+                $(".printer-container").fadeIn(1000);
+                break;
+            case "closeDocument":
+                Printer.closeDocument();
+                break;
+        }
+    });
 
-        switch(action) {
-            case "open":
-                Printer.Open(event.data);
+    $('.cancel-document').click(function () {
+        Printer.closeDocument()
+    });
+
+    $('.printer-accept').click(function () {
+        Printer.saveDocument();
+        $(".printer-container, .document-container").fadeOut(1000);
+        Printer.closeDocument();
+    });
+
+    $('.printer-decline').click(function () {
+        Printer.closeDocument();
+    });
+
+    $(document).keydown(function (event) {
+        switch (event.key) {
+            case "Escape":
+                Printer.closeDocument();
                 break;
-            case "start":
-                Printer.Start(event.data);
-                break;
-            case "close":
-                Printer.Close(event.data);
+            case "Tab":
+                Printer.closeDocument();
                 break;
         }
     });
 });
-
-$(document).ready(function() {
-    $('.printer-accept').click(function() {
-        Printer.Save();
-        Printer.Close();
-    });
-    $('.printer-decline').click(function() {
-        Printer.Close();
-    });
-});
-
-$(document).on('keydown', function() {
-    switch(event.keyCode) {
-        case 27: // ESC
-            Printer.Close();
-            break;
-        case 9: // ESC
-            Printer.Close();
-            break;
-    }
-});
-
-Printer.Open = function(data) {
-    if (data.url) {
-        $(".document-container").fadeIn(150);
-        $(".document-image").attr('src', data.url);
-    } else {
-        console.log('No document is linked to it!!!!!')
-    }
-}
-
-Printer.Start = function(data) {
-    $(".printer-container").fadeIn(150);
-}
-
-Printer.Save = function(data) {
-    $.post(`https://${GetParentResourceName()}/saveDocument`, JSON.stringify({
-        url: $('.printer-input').val()
+ 
+Printer.closeDocument = function (data) {
+    $(".printer-container, .document-container").fadeOut(1000);
+    $.post(`https://${GetParentResourceName()}/closeDocument`, JSON.stringify({
+        url: $('.printer-input').val(),
+        ...data
     }));
-}
 
-Printer.Close = function(data) {
-    $(".printer-container").fadeOut(150);
-    $(".document-container").fadeOut(150);
-    $.post(`https://${GetParentResourceName()}/closeDocument`);
 }
+    
+Printer.openDocument = function (data) {
+    if (data.url) {
+        $(".document-container").fadeIn(1000);
+        $(".document-image").attr('src', data.url);
+        $.post(`https://${GetParentResourceName()}/openedDocument`);
+    } else {
+        console.log('Image URL is invalid. Please let a developer know of this bug');
+    }
+};
+
+Printer.saveDocument = function (data = {}) {
+    $.post(`https://${GetParentResourceName()}/saveDocument`, JSON.stringify({
+        url: $('.printer-input').val(),
+        ...data
+    }));
+};
